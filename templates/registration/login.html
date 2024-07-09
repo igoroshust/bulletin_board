@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Здесь будет страница регистрации</h1>
+
+{% block content %}
+
+<form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Отправить">
+    <input type="hidden" name="next" value="{{ next }}">
+</form>
+
+{% endblock content %}
+</body>
+</html>

@@ -9,7 +9,7 @@ CATEGORY_LIST = (
     (COMPLAINT, 'Жалоба'),
 )
 class Category(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
 
 class Author(models.Model):
     # authorUser = models.OneToOneField(User, on_delete=models.CASCADE) # связь один-к-одному со встроенной моделью юзер
