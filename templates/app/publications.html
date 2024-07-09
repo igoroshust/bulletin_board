@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Все публикации</title>
+</head>
+<body>
+<h3>Список всех публикаций</h3>
+
+{% block content %}
+{% for pub in publications %}
+<p>{{ pub.name }}</p>
+{% endfor %}
+{% endblock content %}
+
+</body>
+</html>

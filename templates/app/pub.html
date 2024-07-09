@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Содержимое публикации</title>
+</head>
+<body>
+<h3>Конкретная публикация</h3>
+
+{% block content %}
+<p>{{ publication.name }}</p>
+<p>{{ publication.text }}</p>
+{% endblock content %}
+
+
+</body>
+</html>
