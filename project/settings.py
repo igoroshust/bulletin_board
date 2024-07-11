@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sites',
     'django.contrib.staticfiles',
-    'accounts',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -126,14 +125,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_ROOT = 'static/'
+STATIC_URL = '/static/'
+
+
+MEDIA_ROOT = 'media/' # путь к файлам
+MEDIA_URL = '/media/' # ссылка, по которой с хоста будет обращение к файлам
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'publications/'
+LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/publications/'
+LOGOUT_REDIRECT_URL = 'http://127.0.0.1:8000/'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -142,15 +147,16 @@ AUTHENTICATION_BACKENDS = [
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
+DEFAULT_FROM_EMAIL = "igoroshust@yandex.ru"
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.yandex.ru'
-EMAIL_POST = 465
+EMAIL_PORT = 465
 EMAIL_HOST_USER = "igoroshust@yandex.ru"
 EMAIL_HOST_PASSWORD = os.getenv('bulletin_board_pwd')
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
-DEFAULT_FROM_EMAIL = "igoroshust@yandex.ru"
