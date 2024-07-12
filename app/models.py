@@ -9,7 +9,6 @@ class Publication(models.Model):
     CATEGORY_LIST = (
         ('tank', 'Танки'),
         ('heal', 'Хилы'),
-        ('heal', 'Хилы'),
         ('dd', 'ДД'),
         ('merchant', 'Торговцы'),
         ('gildmaster', 'Гилдмастеры'),
