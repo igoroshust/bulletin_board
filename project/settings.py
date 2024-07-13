@@ -57,8 +57,6 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
-SITE_ID = 1
-
 ROOT_URLCONF = 'project.urls'
 
 TEMPLATES = [
@@ -139,6 +137,9 @@ MEDIA_URL = '/media/' # ссылка, по которой с хоста буде
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+AUTH_USER_MODEL = 'app.User'
+
+LOGIN_URL = 'http://127.0.0.1:8000/accounts/login/'
 LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/publications/'
 LOGOUT_REDIRECT_URL = 'http://127.0.0.1:8000/'
 
@@ -146,6 +147,8 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+
+ACCOUNT_FORMS = {'signup': 'app.forms.CommonSignupForm'}
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
@@ -162,3 +165,6 @@ EMAIL_HOST_USER = "igoroshust@yandex.ru"
 EMAIL_HOST_PASSWORD = os.getenv('bulletin_board_pwd')
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
+
+SITE_ID = 1
+SITE_URL = 'http://127.0.0.1:8000/'

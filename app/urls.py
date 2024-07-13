@@ -7,4 +7,6 @@ urlpatterns = [
     path('<int:pk>/', PublicationDetail.as_view(), name='publication_detail'),
     path('<int:pk>/update/', PublicationUpdate.as_view(), name='publication_update'),
     path('<int:pk>/delete/', PublicationDelete.as_view(), name='publication_delete'),
+    path('confirm/', ConfirmUser.as_view(), name='confirm_user'),
+    path('profile', ProfileView.as_view(), name='profile'),
 ]

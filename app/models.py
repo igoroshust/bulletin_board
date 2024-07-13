@@ -1,7 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator
 
+class User(AbstractUser):
+    """Расширение модели USER новым полем code"""
+    code = models.CharField(max_length=15, blank=True, null=True)
 
 class Publication(models.Model):
     """Публикация"""
@@ -72,3 +75,5 @@ class Response(models.Model):
         verbose_name = 'Отклик'
         verbose_name_plural = 'Отклики'
 
+class OneTimeCode(models.Model):
+    value = models.CharField(max_length=5)
