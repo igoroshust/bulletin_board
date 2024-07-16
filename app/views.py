@@ -46,27 +46,27 @@ class PublicationDetail(DetailView):
     context_object_name = 'publication'
     queryset = Publication.objects.all()
 
-class PublicationCreate(PermissionRequiredMixin, CreateView):
+class PublicationCreate(LoginRequiredMixin, CreateView):
     """Создание новой статьи"""
     raise_exception = True
-    permission_required('app.add_publication')
+    # permission_required('app.add_publication')
     model = Publication
     form_class = PubForm
     template_name = 'app/pub_create.html'
 
-class PublicationUpdate(PermissionRequiredMixin, UpdateView):
+class PublicationUpdate(LoginRequiredMixin, UpdateView):
     """Изменение статьи"""
-    permission_required('app.change_publication')
     raise_exception = True
+    # permission_required('app.change_publication')
     model = Publication
     form_class = PubForm
     template_name = 'app/pub_update.html'
 
 
-class PublicationDelete(PermissionRequiredMixin, DeleteView):
+class PublicationDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     """Удаление статьи"""
-    permission_required('app.delete_publication')
     raise_exception = True
+    permission_required('app.delete_publication')
     model = Publication
     form_class = PubForm
     template_name = 'app/pub_delete.html'
