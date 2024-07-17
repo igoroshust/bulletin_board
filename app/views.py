@@ -64,10 +64,8 @@ class PublicationUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
 
 class PublicationDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     """Удаление статьи"""
-    raise_exception = True
     permission_required = ('app.delete_publication',)
     model = Publication
-    form_class = PubForm
     template_name = 'app/pub_delete.html'
     success_url = reverse_lazy('publication_list')
 
