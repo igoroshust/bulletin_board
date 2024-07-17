@@ -24,24 +24,25 @@ class CommonSignupForm(SignupForm):
         return user
 
 class PubForm(forms.ModelForm):
-
+    description = forms.CharField(min_length=20)
     class Meta:
         model = Publication
         fields = [
             'name',
             'text',
             'category',
+            'image',
         ]
 
-        # def clean(self):
-        #     cleaned_data = super().clean()
-        #     name = cleaned_data.get("name")
-        #     category = cleaned_data.get("category")
-        #     date = cleaned_data.get("date")
-        #
-        #     if name == category:
-        #         raise ValidationError(
-        #             "Описание не должно совпадать и именем категории"
-        #         )
-        #
-        #     return cleaned_data
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        text = cleaned_data.get('text')
+        category = cleaned_data.get('category')
+
+        if name == category:
+            raise ValidationError(
+                "Описание не должно совпадать и именем категории"
+            )
+
+        return cleaned_data

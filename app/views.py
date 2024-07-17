@@ -45,18 +45,18 @@ class PublicationDetail(DetailView):
     context_object_name = 'publication'
     queryset = Publication.objects.all()
 
-class PublicationCreate(LoginRequiredMixin, CreateView):
+class PublicationCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     """Создание новой статьи"""
     raise_exception = True
-    # permission_required('app.add_publication')
+    permission_required = ('app.add_publication',)
     model = Publication
     form_class = PubForm
     template_name = 'app/pub_create.html'
 
-class PublicationUpdate(LoginRequiredMixin, UpdateView):
+class PublicationUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """Изменение статьи"""
     raise_exception = True
-    # permission_required('app.change_publication')
+    permission_required = ('app.change_publication', )
     model = Publication
     form_class = PubForm
     template_name = 'app/pub_update.html'
@@ -102,3 +102,6 @@ def login_with_code_view(request):
     else:
         pass
 
+def img(request):
+    data = Publication.objects.all()
+    return render(request, 'app/pub.html', {'data': data})

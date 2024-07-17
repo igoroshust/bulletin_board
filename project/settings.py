@@ -129,7 +129,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 
-MEDIA_ROOT = 'media/' # путь к файлам
+MEDIA_ROOT = BASE_DIR / 'media' # путь к файлам
 MEDIA_URL = '/media/' # ссылка, по которой с хоста будет обращение к файлам
 
 # Default primary key field type

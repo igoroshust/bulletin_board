@@ -1,10 +1,13 @@
 from django.db import models
+from django.urls import reverse
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator
+
 
 class User(AbstractUser):
     """Расширение модели USER новым полем code"""
     code = models.CharField(max_length=15, blank=True, null=True)
+
 
 class Publication(models.Model):
     """Публикация"""
@@ -29,11 +32,38 @@ class Publication(models.Model):
     text = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
     # responses = models.ForeignKey(Response, on_delete=models.CASCADE, null=True) # отклики на статью
-    upload = models.FileField(upload_to='uploads/') # файлы
+    responses = models.SmallIntegerField(default=0)
+    image = models.FileField(upload_to='uploads/', null=True)
+    # upload = models.FileField(upload_to='uploads/', null=True) # файлы
+
+    def rate(self):
+        self.responses += 1
+        self.save()
+
+class Response(models.Model):
+    """Отклик"""
+
+    author = models.OneToOneField(User, on_delete=models.CASCADE)
+    text = models.TextField()
+    publication = models.ForeignKey(Publication, on_delete=models.CASCADE)
+    status = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = 'Отклик'
+        verbose_name_plural = 'Отклики'
+
+
+    def __str__(self):
+        """Строковое представление"""
+        return self.name
+    def get_absolute_url(self):
+        """Открываем страницу после создания товара"""
+        return reverse('publication_detail', args=[str(self.id)])
 
     class Meta:
         verbose_name = 'Публикация'
         verbose_name_plural = 'Публикации'
+
 class Author(models.Model):
     """Автор"""
     authorUser = models.OneToOneField(User, on_delete=models.CASCADE) # связь один-к-одному со встроенной моделью юзер
@@ -63,17 +93,7 @@ class PublicationCategory(models.Model):
     categoryThrough = models.ForeignKey(Category, on_delete=models.CASCADE)
 
 
-class Response(models.Model):
-    """Отклик"""
-
-    author = models.OneToOneField(User, on_delete=models.CASCADE)
-    text = models.TextField()
-    publication = models.ForeignKey(Publication, on_delete=models.CASCADE)
-    status = models.BooleanField(default=False)
-
-    class Meta:
-        verbose_name = 'Отклик'
-        verbose_name_plural = 'Отклики'
 
 class OneTimeCode(models.Model):
+    """Одноразовый код подтверждения аккаунта при регистрации"""
     value = models.CharField(max_length=5)
