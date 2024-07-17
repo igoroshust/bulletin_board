@@ -21,8 +21,12 @@
 <br>
 {{ publication.responses }}
 <br>
-<img src="{{ publication.image.url }}" style="width: 300px; heigth=500px;">
+{% if publication.image %}
+<p><img src="{{ publication.image.url }}" style="width: 300px; heigth=500px;"></p>
+{% else %}
+<p></p>
 <br>
+{% endif %}
 <!--<img src="{{ publication.upload.url }}">-->
 <!--                <div class="col-lg-8">-->
 <!--                    &lt;!&ndash; Post content&ndash;&gt;-->

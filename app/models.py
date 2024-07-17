@@ -8,6 +8,9 @@ class User(AbstractUser):
     """Расширение модели USER новым полем code"""
     code = models.CharField(max_length=15, blank=True, null=True)
 
+    def __str__(self):
+        return self.username
+
 
 class Publication(models.Model):
     """Публикация"""
@@ -32,13 +35,19 @@ class Publication(models.Model):
     text = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
     # responses = models.ForeignKey(Response, on_delete=models.CASCADE, null=True) # отклики на статью
-    responses = models.SmallIntegerField(default=0)
+    # responses = models.SmallIntegerField(default=0)
     image = models.FileField(upload_to='uploads/', null=True)
     # upload = models.FileField(upload_to='uploads/', null=True) # файлы
 
-    def rate(self):
-        self.responses += 1
-        self.save()
+    # def rate(self):
+    #     self.responses += 1
+    #     self.save()
+
+    def get_absolute_url(self):
+        return reverse('publication_detail', args=[str(self.id)])
+
+    def __str__(self):
+        return self.title
 
 class Response(models.Model):
     """Отклик"""
@@ -51,6 +60,9 @@ class Response(models.Model):
     class Meta:
         verbose_name = 'Отклик'
         verbose_name_plural = 'Отклики'
+
+    def __str__(self):
+        return f'Отклик от {self.author.username} на {self.publication.name}'
 
 
     def __str__(self):
@@ -86,6 +98,10 @@ class Category(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
+    def __str__(self):
+        return self.name
+
+
 
 class PublicationCategory(models.Model):
     """Промежуточная таблица"""
@@ -97,3 +113,4 @@ class PublicationCategory(models.Model):
 class OneTimeCode(models.Model):
     """Одноразовый код подтверждения аккаунта при регистрации"""
     value = models.CharField(max_length=5)
+
