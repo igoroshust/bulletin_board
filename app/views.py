@@ -1,6 +1,5 @@
 # from allauth.conftest import user
 from random import random, randint
-
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -10,8 +9,8 @@ from django.views.generic import (ListView, DetailView, CreateView, DeleteView, 
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import permission_required, login_required
-from .models import *
 
+from .models import *
 from .forms import PubForm
 
 class ConfirmUser(UpdateView):
@@ -66,7 +65,7 @@ class PublicationUpdate(LoginRequiredMixin, UpdateView):
 class PublicationDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     """Удаление статьи"""
     raise_exception = True
-    permission_required('app.delete_publication')
+    permission_required = ('app.delete_publication',)
     model = Publication
     form_class = PubForm
     template_name = 'app/pub_delete.html'
