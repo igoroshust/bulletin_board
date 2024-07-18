@@ -1,17 +1,27 @@
-# from allauth.conftest import user
 from random import random, randint
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, get_user_model
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse_lazy
-from django.views import View
-from django.views.generic import (ListView, DetailView, CreateView, DeleteView, UpdateView, TemplateView)
+from django.urls import reverse_lazy, reverse
+from django.views.generic import (ListView, DetailView, CreateView, DeleteView, UpdateView, TemplateView, View)
+from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import permission_required, login_required
+from django.contrib import messages
 
 from .models import *
 from .forms import PubForm
+from .utils import *
+
+# User = get_user_model()
+#
+# def send_response_notification_email(response):
+#     subject = 'Новый отклик на публикацю'
+#     message = 'У Вас новый отклик на публикацию, перейдите в профиль для подробной информации'
+#     html_message = render_to_string('response_email.html', {'response': response})
+#     recipient_list = [response.ad.author.email]
+#     send_mail(subject, message, None, recipient_list, html_message=html_message)
 
 class ConfirmUser(UpdateView):
     model = User
@@ -80,6 +90,35 @@ class CategoryListView(PublicationList):
         return queryset
 
 
+class ResponseCreate(LoginRequiredMixin, CreateView):
+    model = Response
+    fields = ['text']
+    template_name = 'responses/create.html'
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.announcement = get_object_or_404(Publication, pk=self.kwargs['publication_id'])
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('publication_detail', kwargs={'pk': self.kwargs['publication_id']})
+
+class ResponseDelete(LoginRequiredMixin, DeleteView):
+    model = Response
+    fields = ['text']
+    success_url = reverse_lazy('publication_list')
+
+    def get_queryset(self):
+        return Response.objects.filter(publication__author=self.request.user)
+
+class ResponseDeleteView(LoginRequiredMixin, DeleteView):
+    model = Response
+    success_url = reverse_lazy('publication_list')
+
+    def get_queryset(self):
+        return Response.objects.filter(publication__author=self.request.user)
+
+
 def usual_login_view(request):
     """Проверка существования пользователя и корректность пароля"""
     username = request.POST['username']
@@ -103,3 +142,31 @@ def login_with_code_view(request):
 def img(request):
     data = Publication.objects.all()
     return render(request, 'app/pub.html', {'data': data})
+
+@login_required
+def response_list(request):
+    responses = Response.objects.filter(user=request.user)
+    return render(request, 'responses/response_list.html', {'responses': responses})
+
+@login_required
+def delete_response(request, publication_id):
+    response = get_object_or_404(Response, pk=publication_id)
+    if response.publication.author != request.user:
+        messages.error(request, 'Вы не имеете права удалять этот отклик.')
+        return redirect('response_list')
+    response.delete()
+    messages.success(request, 'Отклик удален.')
+    return redirect('response_list')
+
+@login_required
+def accept_response(request, publication_id):
+    response = get_object_or_404(Response, pk=publication_id)
+    if response.publication.author != request.user:
+        messages.error(request, 'Вы не имеете права принимать этот отклик.')
+        return redirect('response_list')
+    response.status = 'accepted'
+    response.save()
+    send_notification_email(response.user.email, response.publication.title, accepted=True)
+    messages.success(request, 'Отклик принят.')
+    return redirect('response_list')
+
