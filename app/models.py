@@ -13,19 +13,22 @@ class User(AbstractUser):
     code = models.CharField(max_length=15, blank=True, null=True)
     email = models.EmailField(unique=True)
     is_active = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
 
-    class Meta:
-        verbose_name = 'Автор'
-        verbose_name_plural = 'Авторы'
-        #     swappable = 'AUTH_USER_MODEL'
+    # class Meta:
+    #     swappable = 'AUTH_USER_MODEL'
+
+    def save(self, *args, **kwargs):
+        if self.is_superuser: self.is_active=True
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return self.username
 
 class Category(models.Model):
     """Категория"""
-    name = models.CharField(max_length=100)
-    subscribers = models.ManyToManyField(User, related_name='subscribed_category')
+    name = models.CharField(max_length=100, default='Без категории')
+    subscribers = models.ManyToManyField(User, related_name='subscribed_category', blank=True)
 
     class Meta:
         verbose_name = 'Категория'
@@ -99,23 +102,6 @@ class Response(models.Model):
 
     def __str__(self):
         return f'{self.author.username} оставил(а) отклик на {self.publication.name}'
-
-
-class Author(models.Model):
-    """Автор"""
-    authorUser = models.OneToOneField(User, on_delete=models.CASCADE) # связь один-к-одному со встроенной моделью юзер
-    # responses = models.ForeignKey(Response, on_delete=models.CASCADE, null=True) # отклики автора
-    # publications = models.ForeignKey(Publication, on_delete=models.CASCADE) # публикации автора
-    name = models.CharField(max_length=100)
-    surname = models.CharField(max_length=100)
-    age = models.IntegerField(validators=[MinValueValidator(0, 'Возраст больше 0!')])
-    email = models.EmailField()
-
-    class Meta:
-        verbose_name = 'Автор'
-        verbose_name_plural = 'Авторы'
-
-
 
 class PublicationCategory(models.Model):
     """Промежуточная таблица"""

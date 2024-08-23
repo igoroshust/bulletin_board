@@ -32,6 +32,7 @@ class PubForm(forms.ModelForm):
             'text',
             'category',
             'image',
+            'video_url',
         ]
 
     def clean(self):

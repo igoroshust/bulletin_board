@@ -35,7 +35,7 @@ class ConfirmUser(UpdateView):
                 user.update(code=None)
             else:
                 return render(self.request, 'app/invalid_code.html')
-        return redirect('http://127.0.0.1:8000/account/login/')
+        return redirect('http://127.0.0.1:8000/publications/')
 
 class ProfileView(LoginRequiredMixin, TemplateView):
     template_name = 'app/profile.html'
@@ -55,7 +55,7 @@ class PublicationDetail(DetailView):
     context_object_name = 'publication'
     queryset = Publication.objects.all()
 
-class PublicationCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class PublicationCreate(LoginRequiredMixin, CreateView):
     """Создание новой статьи"""
     raise_exception = True
     permission_required = ('app.add_publication',)
@@ -63,7 +63,7 @@ class PublicationCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
     form_class = PubForm
     template_name = 'app/pub_create.html'
 
-class PublicationUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class PublicationUpdate(LoginRequiredMixin, UpdateView):
     """Изменение статьи"""
     raise_exception = True
     permission_required = ('app.change_publication', )
@@ -106,13 +106,6 @@ class ResponseCreate(LoginRequiredMixin, CreateView):
 class ResponseDelete(LoginRequiredMixin, DeleteView):
     model = Response
     fields = ['text']
-    success_url = reverse_lazy('publication_list')
-
-    def get_queryset(self):
-        return Response.objects.filter(publication__author=self.request.user)
-
-class ResponseDeleteView(LoginRequiredMixin, DeleteView):
-    model = Response
     success_url = reverse_lazy('publication_list')
 
     def get_queryset(self):

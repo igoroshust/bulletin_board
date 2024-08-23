@@ -17,16 +17,47 @@
 <br>
 {{ publication.category }}
 <br>
-{{ publication.data }}
+{{ publication.date }}
 <br>
-{{ publication.responses }}
-<br>
+<!--{{ publication.responses }}-->
+<!--<br>-->
 {% if publication.image %}
 <p><img src="{{ publication.image.url }}" style="width: 300px; heigth=500px;"></p>
 {% else %}
 <p></p>
 <br>
 {% endif %}
+
+{% if user == publication.author %}
+<a href="{% url 'publication_update' publication.pk %}" class="btn btn-primary">Редактировать объявление</a>
+        {% endif %}
+
+        <a href="{% url 'publication_list' %}" class="btn btn-primary">Назад к списку</a><hr>
+
+        {% for response in publication.responses.all %}
+            <div class="card mt-3">
+                <div class="card-body">
+                    <li>
+                        <p>{{ response.text }}</p>
+                        <p>Статус: {{ response.status }}</p>
+                      </li>
+                    <p>{{ response.content }}</p>
+                    <p><small>Автор: {{ response.author.name }}, Дата: {{ response.created }}</small></p>
+                </div>
+            </div><hr>
+        {% endfor %}
+
+        {% if user.is_authenticated %}
+            <form method="post" action="{% url 'response_create' publication.pk %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Отправить отклик</button>
+            </form>
+        {% else %}
+           {# <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a> чтобы оставить отклик.</p> #}
+        {% endif %}
+
+
 <!--<img src="{{ publication.upload.url }}">-->
 <!--                <div class="col-lg-8">-->
 <!--                    &lt;!&ndash; Post content&ndash;&gt;-->
