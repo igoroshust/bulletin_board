@@ -63,6 +63,12 @@ class PublicationCreate(LoginRequiredMixin, CreateView):
     form_class = PubForm
     template_name = 'app/pub_create.html'
 
+    def form_valid(self, form):
+        """Присваиваем author_id значение юзера"""
+        p = form.save(commit=False)
+        p.author = self.request.user
+        return super().form_valid(form)
+
 class PublicationUpdate(LoginRequiredMixin, UpdateView):
     """Изменение статьи"""
     raise_exception = True
@@ -95,9 +101,17 @@ class ResponseCreate(LoginRequiredMixin, CreateView):
     fields = ['text']
     template_name = 'responses/create.html'
 
+    # def form_valid(self, form):
+    #     form.instance.user = self.request.user
+    #     form.instance.publication = get_object_or_404(Publication, pk=self.kwargs['publication_id'])
+    #     return super().form_valid(form)
+
     def form_valid(self, form):
+        """Присваиваем author_id значение юзера"""
+        p = form.save(commit=False)
         form.instance.user = self.request.user
-        form.instance.announcement = get_object_or_404(Publication, pk=self.kwargs['publication_id'])
+        form.instance.publication = get_object_or_404(Publication, pk=self.kwargs['publication_id'])
+        p.author = self.request.user
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -105,7 +119,7 @@ class ResponseCreate(LoginRequiredMixin, CreateView):
 
 class ResponseDelete(LoginRequiredMixin, DeleteView):
     model = Response
-    fields = ['text']
+    fields = ['title']
     success_url = reverse_lazy('publication_list')
 
     def get_queryset(self):

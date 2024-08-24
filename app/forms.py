@@ -29,7 +29,7 @@ class PubForm(forms.ModelForm):
         model = Publication
         fields = [
             'name',
-            'text',
+            'title',
             'category',
             'image',
             'video_url',
@@ -38,7 +38,7 @@ class PubForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         name = cleaned_data.get('name')
-        text = cleaned_data.get('text')
+        text = cleaned_data.get('title')
         category = cleaned_data.get('category')
 
         if name == category:

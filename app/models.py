@@ -19,6 +19,7 @@ class User(AbstractUser):
     #     swappable = 'AUTH_USER_MODEL'
 
     def save(self, *args, **kwargs):
+        """Права суперюзеру без регистрации"""
         if self.is_superuser: self.is_active=True
         return super().save(*args, **kwargs)
 
@@ -57,7 +58,7 @@ class Publication(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='publications')
     name = models.CharField(max_length=68)
-    text = models.TextField()
+    title = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
     image = models.FileField(upload_to='uploads/', null=True, blank=True)
     video_url = models.URLField(null=True, blank=True)
@@ -88,11 +89,16 @@ class Notification(models.Model):
 class Response(models.Model):
     """Отклик"""
 
+    RESPONSE_LIST = (
+        ('pending', 'отправлено'),
+        ('accepted', 'принято'),
+    )
+
     publication = models.ForeignKey(Publication, on_delete=models.CASCADE, related_name='responses')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='responses')
+    status = models.CharField(max_length=20, choices=RESPONSE_LIST, default='отправлено')
     text = models.TextField()
     message = models.CharField(max_length=168)
-    status = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

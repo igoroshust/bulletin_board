@@ -13,7 +13,7 @@
 
 {{ publication.name }}
 <br>
-{{ publication.text }}
+{{ publication.title }}
 <br>
 {{ publication.category }}
 <br>
@@ -37,12 +37,10 @@
         {% for response in publication.responses.all %}
             <div class="card mt-3">
                 <div class="card-body">
-                    <li>
                         <p>{{ response.text }}</p>
+                    <p><i>Автор: {{ response.author }}</i></p>
                         <p>Статус: {{ response.status }}</p>
-                      </li>
-                    <p>{{ response.content }}</p>
-                    <p><small>Автор: {{ response.author.name }}, Дата: {{ response.created }}</small></p>
+                    <p><small>{{ response.created }}</small></p>
                 </div>
             </div><hr>
         {% endfor %}
