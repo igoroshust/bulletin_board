@@ -152,7 +152,7 @@ def img(request):
 
 @login_required
 def response_list(request):
-    responses = Response.objects.filter(user=request.user)
+    responses = Response.objects.filter(author=request.user) #user=request.user
     return render(request, 'responses/response_list.html', {'responses': responses})
 
 @login_required
@@ -161,7 +161,9 @@ def delete_response(request, publication_id):
     if response.publication.author != request.user:
         messages.error(request, 'Вы не имеете права удалять этот отклик.')
         return redirect('response_list')
+    response.status = 'deleted'
     response.delete()
+    send_notification_email(response.author.email, response.publication.title, deleted=True)
     messages.success(request, 'Отклик удален.')
     return redirect('response_list')
 
@@ -170,10 +172,10 @@ def accept_response(request, publication_id):
     response = get_object_or_404(Response, pk=publication_id)
     if response.publication.author != request.user:
         messages.error(request, 'Вы не имеете права принимать этот отклик.')
-        return redirect('response_list')
+        return redirect('publication_list')
     response.status = 'accepted'
     response.save()
-    send_notification_email(response.user.email, response.publication.title, accepted=True)
+    send_notification_email(response.author.email, response.publication.title, accepted=True)
     messages.success(request, 'Отклик принят.')
-    return redirect('response_list')
+    return redirect('publication_list')
 

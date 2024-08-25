@@ -20,10 +20,15 @@ def send_confirmation_mail(user):
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
 
 
-def send_notification_email(user_email, publication_title, accepted=False):
+def send_notification_email(user_email, publication_title, accepted=False, deleted=False):
     if accepted:
         subject = 'Ваш отклик принят'
         message = f'Ваш отклик на объявление "{publication_title}" был принят.'
+
+    elif deleted:
+        subject = 'Ваш отклик отклонён'
+        message = f'Ваш отклик на объявление "{publication_title}" был отклонён.'
+
     else:
         subject = 'Новый отклик на ваше объявление'
         message = f'Вы получили новый отклик на ваше объявление "{publication_title}".'
