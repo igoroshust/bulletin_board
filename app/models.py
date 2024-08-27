@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
 from django.dispatch import receiver
 
 
@@ -128,7 +128,9 @@ def send_response_notification(sender, instance, created, **kwargs):
         recipient = publication.author.email
         send_mail(
             'Новый отклик на Вашу публикацию',
-            f'Новый отклик на публикацию "{publication.title}".',
+            f'''Новый отклик на публикацию "{publication.name[:10]}" \n
+Текст: {publication.title}''',
             settings.DEFAULT_FROM_EMAIL,
             [recipient],
         )
+

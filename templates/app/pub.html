@@ -30,9 +30,8 @@
 
 {% if user == publication.author %}
 <a href="{% url 'publication_update' publication.pk %}" class="btn btn-primary">Редактировать объявление</a>
-        {% endif %}
-
-        <a href="{% url 'publication_list' %}" class="btn btn-primary">Назад к списку</a><hr>
+{% endif %}
+<a href="{% url 'publication_list' %}" class="btn btn-primary">Назад к списку</a><hr>
 
         {% for response in publication.responses.all %}
             <div class="card mt-3">

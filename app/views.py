@@ -175,7 +175,7 @@ def delete_response(request, publication_id):
         return redirect('response_list')
     response.status = 'deleted'
     response.delete()
-    send_notification_email(response.author.email, response.publication.title, deleted=True)
+    send_notification_email(response.author.email, response.publication.name, deleted=True)
     messages.success(request, 'Отклик удален.')
     return redirect('response_list')
 
@@ -187,7 +187,7 @@ def accept_response(request, publication_id):
         return redirect('publication_list')
     response.status = 'accepted'
     response.save()
-    send_notification_email(response.author.email, response.publication.title, accepted=True)
+    send_notification_email(response.author.email, response.publication.name, accepted=True)
     messages.success(request, 'Отклик принят.')
     return redirect('publication_list')
 
