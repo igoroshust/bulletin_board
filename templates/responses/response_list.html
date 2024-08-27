@@ -13,7 +13,16 @@
 <body>
     <div class="container">
         <h1>Мои отклики</h1>
+        {% if categories %}
+        {% for cat in categories %}
+        <ul>
+            <li>{{ cat.name }}</li>
+        </ul>
+        {% endfor %}
+        {% endif %}
+
         {% if responses %}
+
             <div class="list-group">
                 {% for response in responses %}
                     <div class="list-group-item">

@@ -13,6 +13,7 @@ from django.contrib import messages
 from .models import *
 from .forms import PubForm
 from .utils import *
+from .filters import CategoryFilter
 
 # User = get_user_model()
 #
@@ -87,12 +88,23 @@ class PublicationDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
 
 class CategoryListView(PublicationList):
     model = Category
+    # ordering = 'name'
     template_name = 'app/publications.html'
     context_object_name = 'categories'
 
+    # def get_queryset(self):
+    #     queryset = super().get_queryset()
+    #     self.filterset = CategoryFilter(self.request, queryset)
+    #     return self.filterset.qs
+    #
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['filterset'] = self.filterset
+    #     return context
+
     def get_queryset(self):
         self.category = get_object_or_404(Category, id=self.kwargs['pk']) # id - поле, по которому хотим отфильтровать объект модели
-        queryset = Publication.objects.filter(category=self.category).order_by('-date') # -created_at
+        queryset = Publication.objects.filter(category=self.category).order_by('name')
         return queryset
 
 

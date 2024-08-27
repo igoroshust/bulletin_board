@@ -43,7 +43,7 @@ class PubForm(forms.ModelForm):
 
         if name == category:
             raise ValidationError(
-                "Описание не должно совпадать и именем категории"
+                "Описание не должно совпадать с именем категории"
             )
 
         return cleaned_data
