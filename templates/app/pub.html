@@ -11,35 +11,33 @@
 <!--<a href="{{ pub.Publications.url }}">{{ b.name }}</a>-->
 <!--<img src="{{ pub.image.url }}">-->
 
-{{ publication.name }}
-<br>
-{{ publication.title }}
-<br>
-{{ publication.category }}
-<br>
-{{ publication.date }}
-<br>
-<!--{{ publication.responses }}-->
-<!--<br>-->
+<h3 style="padding-top: 20px;">{{ publication.name }}</h3>
+<p>{{ publication.title }}</p>
 {% if publication.image %}
-<p><img src="{{ publication.image.url }}" style="width: 300px; heigth=500px;"></p>
+<p><img src="{{ publication.image.url }}" style="width: 300px; heigth=500px; border-radius: 10px;"></p>
 {% else %}
-<p></p>
+{% endif %}
+<p>Категория: {{ publication.category }}</p>
+<p>Автор: {{ publication.author }}</p>
+<p>Опубликовано: {{ publication.date|date:"d M, Y" }}</p>
 <br>
-{% endif %}
 
+<form>
+    <button style="border: none; background-color: #ffffff;"><a href="{% url 'publication_list' %}" class="btn btn-primary">Назад к списку</a></button>
+</form>
+<br><br>
 {% if user == publication.author %}
-<a href="{% url 'publication_update' publication.pk %}" class="btn btn-primary">Редактировать объявление</a>
+<form>
+    <button style="border: none; background-color: #ffffff;"><a href="{% url 'publication_update' publication.pk %}" class="btn btn-primary" style="">Редактировать объявление</a></button>
+</form>
 {% endif %}
-<a href="{% url 'publication_list' %}" class="btn btn-primary">Назад к списку</a><hr>
-
+<br><br>
         {% for response in publication.responses.all %}
             <div class="card mt-3">
                 <div class="card-body">
                         <p>{{ response.text }}</p>
                     <p><i>Автор: {{ response.author }}</i></p>
-                        <p>Статус: {{ response.status }}</p>
-                    <p><small>{{ response.created }}</small></p>
+                    <p><small>Дата: {{ response.created|date:"d M, Y" }}</small></p>
                 </div>
             </div><hr>
         {% endfor %}

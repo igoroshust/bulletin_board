@@ -1,25 +1,27 @@
-<!DOCTYPE html>
+{% extends 'index.html' %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Мои отклики</title>
     {% load static %}
-    <a href="{% url 'publication_list' %}" class="home-button"><i class="fa fa-home"></i> Главная</a>
+    {# <a href="{% url 'publication_list' %}" class="home-button"><i class="fa fa-home"></i> Главная</a> #}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-    <div class="container">
+{% block content %}
+    <div class="container" style="padding-top: 25px;">
         <h1>Мои отклики</h1>
+        <br>
         {% if responses %}
             <div class="list-group">
                 {% for response in responses %}
-                    <div class="list-group-item">
+                    <div class="list-group-item" style="border-radius: 10px;">
                         <h5 class="mb-1">{{ response.publication.title }}</h5>
                         <p class="mb-1">{{ response.text }}</p>
-                        <small>Дата: {{ response.created }}</small>
+                        <small>Дата: {{ response.created|date:"d M, Y" }}</small>
                         <p>Статус: {{ response.status }}</p>
                        {% if response.publication.author == user %}
                             <div class="mt-2">
@@ -28,6 +30,7 @@
                             </div>
                       {% endif %}
                     </div>
+                <br>
                 {% endfor %}
             </div>
         {% else %}
@@ -37,5 +40,6 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock content %}
 </body>
 </html>

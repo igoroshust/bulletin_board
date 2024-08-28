@@ -17,7 +17,7 @@
                     <div class="card mb-4">
                         <a href="#!"><img class="card-img-top" src="https://dummyimage.com/850x350/dee2e6/6c757d.jpg" alt="..." /></a>
                         <div class="card-body">
-                            <div class="small text-muted">{{ pubs.date }}</div>
+                            <div class="small text-muted">{{ pubs.date|date:"d M, Y" }}</div>
                             <h2 class="card-title">{{ pubs.name }}</h2>
                             <p class="card-text">{{ pubs.title|truncatechars:20 }}...</p>
                             <a class="btn btn-primary" href="http://127.0.0.1:8000/publications/{{ pubs.id }}">Читать подробнее →</a>
