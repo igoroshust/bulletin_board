@@ -15,6 +15,7 @@
     <div class="container" style="padding-top: 25px;">
         <h1>Мои отклики</h1>
         <br>
+
         {% if responses %}
             <div class="list-group">
                 {% for response in responses %}
@@ -22,7 +23,7 @@
                         <h5 class="mb-1">{{ response.publication.title }}</h5>
                         <p class="mb-1">{{ response.text }}</p>
                         <small>Дата: {{ response.created|date:"d M, Y" }}</small>
-                        <p>Статус: {{ response.status }}</p>
+                        <p>Статус: {{ response.get_status_display }}</p>
                        {% if response.publication.author == user %}
                             <div class="mt-2">
                                 <a href="{% url 'accept_response' response.id %}" class="btn btn-success btn-sm">Принять</a>
@@ -34,7 +35,7 @@
                 {% endfor %}
             </div>
         {% else %}
-            <p>У вас нет откликов.</p>
+            <p>У Вас нет откликов.</p>
         {% endif %}
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

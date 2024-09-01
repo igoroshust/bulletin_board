@@ -18,12 +18,14 @@ def my_job():
     text = '\n'.join(['{} - {}'.format(p.name, p.date) for p in publications])
     # user = super().save()
     mail = User.email
+    # recipient = publication.author.email
 
     send_mail(
         subject=f'Актуальные статьи',
         message=f'Свежие публикации:',
         from_email=settings.DEFAULT_FROM_EMAIL,
         recipient_list=[mail],
+        # resicipent_list=[recipient]
     )
 
 

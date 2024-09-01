@@ -15,7 +15,6 @@
 <p>{{ publication.title }}</p>
 {% if publication.image %}
 <p><img src="{{ publication.image.url }}" style="width: 300px; heigth=500px; border-radius: 10px;"></p>
-{% else %}
 {% endif %}
 <p>Категория: {{ publication.category }}</p>
 <p>Автор: {{ publication.author }}</p>
@@ -38,6 +37,12 @@
                         <p>{{ response.text }}</p>
                     <p><i>Автор: {{ response.author }}</i></p>
                     <p><small>Дата: {{ response.created|date:"d M, Y" }}</small></p>
+                     {% if response.publication.author == user %}
+                            <div class="mt-2">
+                                <a href="{% url 'accept_response' response.id %}" class="btn btn-success btn-sm">Принять</a>
+                                <a href="{% url 'delete_response' response.id %}" class="btn btn-danger btn-sm">Удалить</a>
+                            </div>
+                      {% endif %}
                 </div>
             </div><hr>
         {% endfor %}

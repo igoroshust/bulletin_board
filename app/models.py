@@ -56,7 +56,7 @@ class Publication(models.Model):
     )
 
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='publications')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='publications') # categories
     name = models.CharField(max_length=68)
     title = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
@@ -96,7 +96,7 @@ class Response(models.Model):
 
     publication = models.ForeignKey(Publication, on_delete=models.CASCADE, related_name='responses')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='responses')
-    status = models.CharField(max_length=20, choices=RESPONSE_LIST, default='отправлено')
+    status = models.CharField(max_length=20, choices=RESPONSE_LIST, default='pending')
     text = models.TextField()
     message = models.CharField(max_length=168)
     created = models.DateTimeField(auto_now_add=True)

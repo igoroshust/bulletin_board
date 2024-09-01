@@ -36,7 +36,7 @@ class ConfirmUser(UpdateView):
                 user.update(code=None)
             else:
                 return render(self.request, 'app/invalid_code.html')
-        return redirect('http://127.0.0.1:8000/publications/')
+        return redirect('http://127.0.0.1:8000/accounts/login/')
 
 class ProfileView(LoginRequiredMixin, TemplateView):
     template_name = 'app/profile.html'
@@ -89,23 +89,37 @@ class PublicationDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
 class CategoryListView(PublicationList):
     model = Category
     # ordering = 'name'
-    template_name = 'app/publications.html'
+    template_name = 'app/publications.html' # template_name = 'responses/response_list.html'
     context_object_name = 'categories'
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        self.filterset = CategoryFilter(self.request, queryset)
+        return self.filterset.qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filterset'] = self.filterset
+        return context
+
     # def get_queryset(self):
-    #     queryset = super().get_queryset()
-    #     self.filterset = CategoryFilter(self.request, queryset)
-    #     return self.filterset.qs
+    #     self.category = get_object_or_404(Category, id=self.kwargs['pk']) # id - поле, по которому хотим отфильтровать объект модели
+    #     queryset = Publication.objects.filter(category=self.category).order_by('name')
+    #     return queryset
     #
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
-    #     context['filterset'] = self.filterset
+    #     context['category'] = self.category
     #     return context
 
-    def get_queryset(self):
-        self.category = get_object_or_404(Category, id=self.kwargs['pk']) # id - поле, по которому хотим отфильтровать объект модели
-        queryset = Publication.objects.filter(category=self.category).order_by('name')
-        return queryset
+    # def get_queryset(self):
+    #     queryset = Category.objects.filter().order_by('name')
+    #     return queryset
+
+    # def get_queryset(self):
+    #     queryset = Category.objects.all()
+    #     return queryset
+
 
 
 class ResponseCreate(LoginRequiredMixin, CreateView):
@@ -186,6 +200,7 @@ def accept_response(request, publication_id):
         messages.error(request, 'Вы не имеете права принимать этот отклик.')
         return redirect('publication_list')
     response.status = 'accepted'
+
     response.save()
     send_notification_email(response.author.email, response.publication.name, accepted=True)
     messages.success(request, 'Отклик принят.')
