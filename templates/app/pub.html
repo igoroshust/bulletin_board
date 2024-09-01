@@ -38,10 +38,14 @@
                     <p><i>Автор: {{ response.author }}</i></p>
                     <p><small>Дата: {{ response.created|date:"d M, Y" }}</small></p>
                      {% if response.publication.author == user %}
+                        {% if response.status == 'pending' %}
                             <div class="mt-2">
                                 <a href="{% url 'accept_response' response.id %}" class="btn btn-success btn-sm">Принять</a>
                                 <a href="{% url 'delete_response' response.id %}" class="btn btn-danger btn-sm">Удалить</a>
                             </div>
+                        {% else %}
+                        <p>Статус: {{ response.get_status_display }}</p>
+                    {% endif %}
                       {% endif %}
                 </div>
             </div><hr>

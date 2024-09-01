@@ -91,6 +91,7 @@ class Response(models.Model):
 
     RESPONSE_LIST = (
         ('pending', 'отправлено'),
+        ('deleted', 'отклонено'),
         ('accepted', 'принято'),
     )
 

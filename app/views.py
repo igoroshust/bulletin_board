@@ -13,7 +13,7 @@ from django.contrib import messages
 from .models import *
 from .forms import PubForm
 from .utils import *
-from .filters import CategoryFilter
+from .filters import *
 
 # User = get_user_model()
 #
@@ -48,6 +48,7 @@ class PublicationList(ListView):
     ordering = '-date'
     template_name = 'app/publications.html'
     context_object_name = 'publications'
+
 
 class PublicationDetail(DetailView):
     """Содержимое публикации"""
@@ -86,21 +87,27 @@ class PublicationDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
     template_name = 'app/pub_delete.html'
     success_url = reverse_lazy('publication_list')
 
-class CategoryListView(PublicationList):
+class CategoryListView(PublicationList): # PublicationList
     model = Category
     # ordering = 'name'
-    template_name = 'app/publications.html' # template_name = 'responses/response_list.html'
+    template_name = 'responses/response_list.html' # template_name = 'responses/response_list.html'
     context_object_name = 'categories'
 
     def get_queryset(self):
+        """Функция получения списка категорий"""
+        # получаем обычный запрос
         queryset = super().get_queryset()
-        self.filterset = CategoryFilter(self.request, queryset)
+        # используем класс фильтрации
+        # сохраняем фильтрацию в объекте класса, чтобы потом добавить в контекст и использовать в шаблоне
+        self.filterset = CategoryFilter(self.request.GET, queryset)
+        # возвращаем из функции отфильтрованный список категорий
         return self.filterset.qs
 
     def get_context_data(self, **kwargs):
+        """Метод, позволяющий изменить набор данных, передаваемых в шаблон"""
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
-        return context
+        return context # context - словарь, передаваемый в template
 
     # def get_queryset(self):
     #     self.category = get_object_or_404(Category, id=self.kwargs['pk']) # id - поле, по которому хотим отфильтровать объект модели
@@ -186,9 +193,9 @@ def delete_response(request, publication_id):
     response = get_object_or_404(Response, pk=publication_id)
     if response.publication.author != request.user:
         messages.error(request, 'Вы не имеете права удалять этот отклик.')
-        return redirect('response_list')
+        return redirect('publication_detail')
     response.status = 'deleted'
-    response.delete()
+    response.save() #delete
     send_notification_email(response.author.email, response.publication.name, deleted=True)
     messages.success(request, 'Отклик удален.')
     return redirect('response_list')
@@ -200,9 +207,8 @@ def accept_response(request, publication_id):
         messages.error(request, 'Вы не имеете права принимать этот отклик.')
         return redirect('publication_list')
     response.status = 'accepted'
-
     response.save()
     send_notification_email(response.author.email, response.publication.name, accepted=True)
     messages.success(request, 'Отклик принят.')
-    return redirect('publication_list')
+    return redirect('response_list')
 
