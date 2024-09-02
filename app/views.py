@@ -185,7 +185,7 @@ def img(request):
 
 @login_required
 def response_list(request):
-    responses = Response.objects.filter(author=request.user) #user=request.user
+    responses = Response.objects.all() #user=request.user
     return render(request, 'responses/response_list.html', {'responses': responses})
 
 @login_required
@@ -195,7 +195,7 @@ def delete_response(request, publication_id):
         messages.error(request, 'Вы не имеете права удалять этот отклик.')
         return redirect('publication_detail')
     response.status = 'deleted'
-    response.save() #delete
+    response.delete() #save
     send_notification_email(response.author.email, response.publication.name, deleted=True)
     messages.success(request, 'Отклик удален.')
     return redirect('response_list')

@@ -15,15 +15,24 @@
     <div class="container" style="padding-top: 25px;">
         <h1>Мои отклики</h1>
         <br>
-
         {% if responses %}
             <div class="list-group">
                 {% for response in responses %}
                     <div class="list-group-item" style="border-radius: 10px;">
                         <h5 class="mb-1">{{ response.publication.title }}</h5>
                         <p class="mb-1">{{ response.text }}</p>
+                        <p>Автор: {{ response.author }}</p>
                         <small>Дата: {{ response.created|date:"d M, Y" }}</small>
+                        {% if response.publication.author == user %}
+                        {% if response.status == 'pending' %}
+                            <div class="mt-2">
+                                <a href="{% url 'accept_response' response.id %}" class="btn btn-success btn-sm">Принять</a>
+                                <a href="{% url 'delete_response' response.id %}" class="btn btn-danger btn-sm">Удалить</a>
+                            </div>
+                        {% else %}
                         <p>Статус: {{ response.get_status_display }}</p>
+                    {% endif %}
+                      {% endif %}
                     </div>
                 <br>
                 {% endfor %}
