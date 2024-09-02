@@ -11,7 +11,7 @@ class CategoryFilter(FilterSet):
 
 class PublicationFilter(FilterSet):
     class Meta:
-        model = Category
+        model = Publication
         fields = {
             'name': ['icontains'],
         }

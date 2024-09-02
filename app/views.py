@@ -49,6 +49,34 @@ class PublicationList(ListView):
     template_name = 'app/publications.html'
     context_object_name = 'publications'
 
+    def get_queryset(self):
+        """Получение списка новостей"""
+        queryset = super().get_queryset()
+        self.filterset = PublicationFilter(self.request.GET, queryset)
+        return self.filterset.qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filterset'] = self.filterset
+        return context
+
+
+class PLView(ListView):
+    """Список публикаций"""
+    model = Publication
+    template_name = 'responses/response_list.html'
+    context_object_name = 'publications'
+
+    def get_queryset(self):
+        """Получение списка новостей"""
+        queryset = super().get_queryset()
+        self.filterset = PublicationFilter(self.request.GET, queryset)
+        return self.filterset.qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filterset'] = self.filterset
+        return context
 
 class PublicationDetail(DetailView):
     """Содержимое публикации"""
@@ -185,9 +213,8 @@ def img(request):
 
 @login_required
 def response_list(request):
-    responses = Response.objects.all() #user=request.user
+    responses = Response.objects.all()  # user=request.user
     return render(request, 'responses/response_list.html', {'responses': responses})
-
 @login_required
 def delete_response(request, publication_id):
     response = get_object_or_404(Response, pk=publication_id)
@@ -195,7 +222,7 @@ def delete_response(request, publication_id):
         messages.error(request, 'Вы не имеете права удалять этот отклик.')
         return redirect('publication_detail')
     response.status = 'deleted'
-    response.delete() #save
+    response.save() #save
     send_notification_email(response.author.email, response.publication.name, deleted=True)
     messages.success(request, 'Отклик удален.')
     return redirect('response_list')

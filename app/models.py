@@ -121,17 +121,42 @@ class OneTimeCode(models.Model):
     """Одноразовый код подтверждения аккаунта при регистрации"""
     value = models.CharField(max_length=5)
 
+# @receiver(post_save, sender=Response)
+# def send_response_notification(instance, created, **kwargs):
+#     if not created:
+#         return
+#
+#     emails = Publication.objects.filter()
+#
+#    subject = 'Новый отклик на Вашу публикацию'
+#
+#         text_content = (
+#             f'Статья: {publication.name} <br>'
+#             f'Дата публикации {publication.date} <br><br>'
+#             f'Ссылка на статью: http://127.0.0.1:8000{publication.get_absolute_url()}'
+#         )
+#
+#         html_content = (
+#             f'Статья: {publication.name} <br>'
+#             f'<a href="http://127.0.0.1:8000/{publication.get_absolute_url()}"'
+#             f'Перейти по ссылке</a>'
+#         )
+#
+#         for email in emails:
+#             msg = EmailMultiAlternatives(subject, text_content, None, [email])
+#             msg.attach_alternative(html_content, "text/html")
+#             msg.send()
 
-@receiver(post_save, sender=Response)
-def send_response_notification(sender, instance, created, **kwargs):
-    if created:
-        publication = instance.publication
-        recipient = publication.author.email
-        send_mail(
-            'Новый отклик на Вашу публикацию',
-            f'''Новый отклик на публикацию "{publication.name[:10]}" \n
-Текст: {publication.title}''',
-            settings.DEFAULT_FROM_EMAIL,
-            [recipient],
-        )
 
+# @receiver(post_save, sender=Response)
+# def send_response_notification(sender, instance, created, **kwargs):
+#     if created:
+#         publication = instance.publication
+#         recipient = publication.author.email
+#         send_mail(
+#             'Новый отклик на Вашу публикацию',
+#             f'''Новый отклик на публикацию "{publication.name[:10]}" \n
+# Текст: {publication.title}''',
+#             settings.DEFAULT_FROM_EMAIL,
+#             [recipient],
+#         )
