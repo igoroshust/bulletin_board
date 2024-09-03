@@ -12,6 +12,7 @@ urlpatterns = [
     path('responses/', response_list, name='response_list'),
     path('responses/delete/<int:publication_id>/', delete_response, name='delete_response'),
     path('responses/accept/<int:publication_id>/', accept_response, name='accept_response'),
+    path('responses/hide/<int:publication_id>/', hide_response, name='hide_response'),
     path('confirm/', ConfirmUser.as_view(), name='confirm_user'),
     path('profile', ProfileView.as_view(), name='profile'),
 ]

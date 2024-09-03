@@ -18,8 +18,8 @@
 
         <select>
             <option>Все отклики</option>
-            <option>Принятые</option>
-            <option>Отклонённые</option>
+            <option value="accepted">Принятые</option>
+            <option value="deleted">Отклонённые</option>
         </select>
         <button>Применить</button>
         <br><br>
@@ -40,11 +40,12 @@
                         {% if response.status == 'pending' %}
                             <div class="mt-2">
                                 <a href="{% url 'accept_response' response.id %}" class="btn btn-success btn-sm">Принять</a>
-                                <a href="{% url 'delete_response' response.id %}" class="btn btn-danger btn-sm">Удалить</a>
+                                <a href="{% url 'delete_response' response.id %}" class="btn btn-danger btn-sm">Отклонить</a>
                             </div>
                         {% else %}
                         <br><br>
                         <p>Статус: {{ response.get_status_display }}</p>
+                        <a href="{% url 'hide_response' response.id %}" style="text-decoration: none; color: red;">Удалить</a>
                     {% endif %}
                       {% endif %}
                     </div>

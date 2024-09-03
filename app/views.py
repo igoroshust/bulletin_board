@@ -239,3 +239,13 @@ def accept_response(request, publication_id):
     messages.success(request, 'Отклик принят.')
     return redirect('response_list')
 
+@login_required
+def hide_response(request, publication_id):
+    response = get_object_or_404(Response, pk=publication_id)
+    if response.publication.author != request.user:
+        messages.error(request, 'Вы не имеете права принимать этот отклик.')
+        return redirect('publication_list')
+    response.status = 'hide'
+    response.delete()
+    return redirect('response_list')
+
