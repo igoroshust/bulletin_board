@@ -12,7 +12,8 @@ class CommonSignupForm(SignupForm):
     def save(self, request):
         user = super(CommonSignupForm, self).save(request)
         user.is_active = False
-        code = ''.join(random.sample(hexdigits, 5))
+        count = random.randint(1111, 9999)
+        code = ''.join(str(count))
         user.code = code
         user.save()
         send_mail(
