@@ -1,4 +1,5 @@
-from django_filters import FilterSet
+import django_filters
+from django_filters import FilterSet, ModelChoiceFilter
 from .models import *
 
 class CategoryFilter(FilterSet):
@@ -14,4 +15,16 @@ class PublicationFilter(FilterSet):
         model = Publication
         fields = {
             'name': ['icontains'],
+        }
+
+class ResponseFilter(django_filters.FilterSet):
+    status = ModelChoiceFilter(
+        field_name='status',
+        queryset=Response.objects.all(),
+        label='Отклики',
+    )
+    class Meta:
+        model = Response
+        fields = {
+            'status': ['exact'],
         }

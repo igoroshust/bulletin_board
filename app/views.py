@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import permission_required, login_required
 from django.contrib import messages
 
 from .models import *
-from .forms import PubForm
+from .forms import *
 from .utils import *
 from .filters import *
 
@@ -61,23 +61,6 @@ class PublicationList(ListView):
         return context
 
 
-class PLView(ListView):
-    """Список публикаций"""
-    model = Publication
-    template_name = 'responses/response_list.html'
-    context_object_name = 'publications'
-
-    def get_queryset(self):
-        """Получение списка новостей"""
-        queryset = super().get_queryset()
-        self.filterset = PublicationFilter(self.request.GET, queryset)
-        return self.filterset.qs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['filterset'] = self.filterset
-        return context
-
 class PublicationDetail(DetailView):
     """Содержимое публикации"""
     model = Publication
@@ -115,27 +98,28 @@ class PublicationDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
     template_name = 'app/pub_delete.html'
     success_url = reverse_lazy('publication_list')
 
-class CategoryListView(PublicationList): # PublicationList
-    model = Category
-    # ordering = 'name'
-    template_name = 'responses/response_list.html' # template_name = 'responses/response_list.html'
-    context_object_name = 'categories'
-
-    def get_queryset(self):
-        """Функция получения списка категорий"""
-        # получаем обычный запрос
-        queryset = super().get_queryset()
-        # используем класс фильтрации
-        # сохраняем фильтрацию в объекте класса, чтобы потом добавить в контекст и использовать в шаблоне
-        self.filterset = CategoryFilter(self.request.GET, queryset)
-        # возвращаем из функции отфильтрованный список категорий
-        return self.filterset.qs
-
-    def get_context_data(self, **kwargs):
-        """Метод, позволяющий изменить набор данных, передаваемых в шаблон"""
-        context = super().get_context_data(**kwargs)
-        context['filterset'] = self.filterset
-        return context # context - словарь, передаваемый в template
+# class CategoryListView(PublicationList): # PublicationList
+#     """Список категорий"""
+#     model = Category
+#     # ordering = 'name'
+#     template_name = 'responses/response_list.html' # template_name = 'responses/response_list.html'
+#     context_object_name = 'categories'
+#
+#     def get_queryset(self):
+#         """Функция получения списка категорий"""
+#         # получаем обычный запрос
+#         queryset = super().get_queryset()
+#         # используем класс фильтрации
+#         # сохраняем фильтрацию в объекте класса, чтобы потом добавить в контекст и использовать в шаблоне
+#         self.filterset = CategoryFilter(self.request.GET, queryset)
+#         # возвращаем из функции отфильтрованный список категорий
+#         return self.filterset.qs
+#
+#     def get_context_data(self, **kwargs):
+#         """Метод, позволяющий изменить набор данных, передаваемых в шаблон"""
+#         context = super().get_context_data(**kwargs)
+#         context['filterset'] = self.filterset
+#         return context # context - словарь, передаваемый в template
 
     # def get_queryset(self):
     #     self.category = get_object_or_404(Category, id=self.kwargs['pk']) # id - поле, по которому хотим отфильтровать объект модели
@@ -187,6 +171,33 @@ class ResponseDelete(LoginRequiredMixin, DeleteView):
         return Response.objects.filter(publication__author=self.request.user)
 
 
+class ResponseStatusList(ListView): #PublicationList
+    model = Response
+    template_name = 'responses/response_list.html'
+    context_object_name = 'responses'
+
+    def get_queryset(self):
+        """Получение списка откликов"""
+
+        queryset = super().get_queryset()
+        self.filterset = ResponseFilter(self.request.GET, queryset)
+        return self.filterset.qs
+
+        # self.status = get_object_or_404(Response, id=self.kwargs['pk'])
+        # queryset = Response.objects.filter(status=self.status) #.order_by('')
+        # return queryset
+
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+        context['filterset'] = self.filterset
+        return context
+
+        # context = super().get_context_data(**kwargs)
+        # context['status'] = self.status
+        # return context
+
+
 def usual_login_view(request):
     """Проверка существования пользователя и корректность пароля"""
     username = request.POST['username']
@@ -215,6 +226,7 @@ def img(request):
 def response_list(request):
     responses = Response.objects.all()  # user=request.user
     return render(request, 'responses/response_list.html', {'responses': responses})
+
 @login_required
 def delete_response(request, publication_id):
     response = get_object_or_404(Response, pk=publication_id)

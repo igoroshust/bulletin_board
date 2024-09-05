@@ -48,3 +48,10 @@ class PubForm(forms.ModelForm):
             )
 
         return cleaned_data
+
+class ResponseForm(forms.ModelForm):
+    class Meta:
+        model = Response
+        fields = {
+            'status',
+        }
