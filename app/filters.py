@@ -18,11 +18,11 @@ class PublicationFilter(FilterSet):
         }
 
 class ResponseFilter(django_filters.FilterSet):
-    status = ModelChoiceFilter(
-        field_name='status',
-        queryset=Response.objects.all(),
-        label='Отклики',
-    )
+    # status = ModelChoiceFilter(
+    #     field_name='status',
+    #     queryset=Response.objects.all(),
+    #     label='Отклики',
+    # )
     class Meta:
         model = Response
         fields = {

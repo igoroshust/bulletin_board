@@ -16,6 +16,11 @@
 {% if publication.image %}
 <p><img src="{{ publication.image.url }}" style="width: 300px; heigth=500px; border-radius: 10px;"></p>
 {% endif %}
+{% if publication.video_url %}
+<video>
+<source src="{{ publication.video_url }}" type="video/webm">
+</video>
+{% endif %}
 <p>Категория: {{ publication.category }}</p>
 <p>Автор: {{ publication.author }}</p>
 <p>Опубликовано: {{ publication.date|date:"d M, Y" }}</p>

@@ -224,7 +224,7 @@ def img(request):
 
 @login_required
 def response_list(request):
-    responses = Response.objects.all()  # user=request.user
+    responses = ResponseFilter(self.request.GET, queryset).qs # user=request.user
     return render(request, 'responses/response_list.html', {'responses': responses})
 
 @login_required

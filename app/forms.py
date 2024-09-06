@@ -36,6 +36,11 @@ class PubForm(forms.ModelForm):
             'video_url',
         ]
 
+    def __init__(self, *args, **kwargs):
+        """Делаем description необязательным полем"""
+        super(PubForm, self).__init__(*args, **kwargs)
+        self.fields['description'].required = False
+
     def clean(self):
         cleaned_data = super().clean()
         name = cleaned_data.get('name')
