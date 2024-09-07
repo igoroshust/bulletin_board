@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Создание публикации</title>
+    <!-- Подключите необходимые CSS, например Bootstrap, если требуется -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
 {% block content %}
+<div class="container mt-5">
 <h3>Создать публикацию</h3>
 <hr>
 <form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }} {# форма, отображающаяся на странице #}
-    <input type="submit" value="Сохранить" />
+    <input type="submit" class="btn btn-primary" value="Сохранить" />
 </form>
+</div>
 {% endblock content %}
 </body>
 </html>

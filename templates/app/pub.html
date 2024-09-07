@@ -11,50 +11,53 @@
 <!--<a href="{{ pub.Publications.url }}">{{ b.name }}</a>-->
 <!--<img src="{{ pub.image.url }}">-->
 
+<form style="margin-top: 30px;">
+    <button style="border: none; background-color: #ffffff;"><a href="{% url 'publication_list' %}" class="btn btn-primary">Назад к списку</a></button>
+    {% if user == publication.author %}
+    <button style="border: none; background-color: #ffffff;"><a href="{% url 'publication_update' publication.pk %}" class="btn btn-primary">Редактировать публикацию</a></button>
+     <button style="border: none; background-color: #ffffff;"><a href="{% url 'publication_delete' publication.pk %}" class="btn btn-danger btn-sm" style="padding: 7.5px; border-radius: 5px;">Удалить публикацию</a></button>
+{% endif %}
+    <br><br>
+</form>
+
+<div class="card mb-4" style="background: #f9f9f9; border-radius: 15px;">
 <h3 style="padding-top: 20px;">{{ publication.name }}</h3>
 <p>{{ publication.title }}</p>
 {% if publication.image %}
-<p><img src="{{ publication.image.url }}" style="width: 300px; heigth=500px; border-radius: 10px;"></p>
+<p><img src="{{ publication.image.url }}" style="width: 502px; height: 450px; border-radius: 5px;"></p>
 {% endif %}
 {% if publication.video_url %}
-<video>
-<source src="{{ publication.video_url }}" type="video/webm">
+<video height="320" width="320">
+<source src="{{ publication.video_url }}" type="video/mp4" />
 </video>
 {% endif %}
 <p>Категория: {{ publication.category }}</p>
 <p>Автор: {{ publication.author }}</p>
 <p>Опубликовано: {{ publication.date|date:"d M, Y" }}</p>
-<br>
+</div>
 
-<form>
-    <button style="border: none; background-color: #ffffff;"><a href="{% url 'publication_list' %}" class="btn btn-primary">Назад к списку</a></button>
-</form>
-<br><br>
-{% if user == publication.author %}
-<form>
-    <button style="border: none; background-color: #ffffff;"><a href="{% url 'publication_update' publication.pk %}" class="btn btn-primary" style="">Редактировать объявление</a></button>
-</form>
-{% endif %}
-<br><br>
+<h4>Отклики</h4>
+{% if publication.responses.all %}
         {% for response in publication.responses.all %}
             <div class="card mt-3">
                 <div class="card-body">
                         <p>{{ response.text }}</p>
                     <p><i>Автор: {{ response.author }}</i></p>
                     <p><small>Дата: {{ response.created|date:"d M, Y" }}</small></p>
-
                 </div>
-            </div><hr>
+            </div>
         {% endfor %}
-
+{% else %}
+<p>Откликов нет</p>
+{% endif %}
         {% if user.is_authenticated %}
             <form method="post" action="{% url 'response_create' publication.pk %}">
                 {% csrf_token %}
                 {{ form.as_p }}
+                <br>
                 <button type="submit" class="btn btn-primary">Отправить отклик</button>
+                <br><br>
             </form>
-        {% else %}
-           {# <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a> чтобы оставить отклик.</p> #}
         {% endif %}
 
 

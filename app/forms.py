@@ -25,7 +25,6 @@ class CommonSignupForm(SignupForm):
         return user
 
 class PubForm(forms.ModelForm):
-    description = forms.CharField(min_length=20)
     class Meta:
         model = Publication
         fields = [
@@ -33,13 +32,15 @@ class PubForm(forms.ModelForm):
             'title',
             'category',
             'image',
-            'video_url',
+            # 'video_url',
         ]
-
-    def __init__(self, *args, **kwargs):
-        """Делаем description необязательным полем"""
-        super(PubForm, self).__init__(*args, **kwargs)
-        self.fields['description'].required = False
+        labels = {
+            'name': 'Название',
+            'title': 'Текст',
+            'category': 'Категория',
+            'image': 'Изображение',
+            # 'video_url': 'Видео (ссылка)',
+        }
 
     def clean(self):
         cleaned_data = super().clean()

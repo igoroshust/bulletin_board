@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Удаление публикации</title>
+    <!-- Подключите необходимые CSS, например Bootstrap, если требуется -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
 {% block content %}
-<h1>Удаление статьи</h1>
+<div class="container mt-5">
+<h3>Удаление статьи</h3>
 <hr>
 <form action="" method="post">
     {% csrf_token %}
     <p>Удаляем "{{ object.name }}"?</p>
-    <input type="submit" value="Удалить" />
+    <input type="submit" class="btn btn-danger btn-sm" value="Удалить" />
 </form>
+</div>
 {% endblock content %}
 </body>
 </html>

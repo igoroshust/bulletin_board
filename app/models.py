@@ -62,7 +62,7 @@ class Publication(models.Model):
     title = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
     image = models.FileField(upload_to='uploads/', null=True, blank=True)
-    video_url = models.URLField(null=True, blank=True)
+    # video_url = models.URLField(null=True, blank=True)
     # created_at = models.DateTimeField(auto_now_add=True)
     # updated_at = models.DateTimeField(auto_now=True)
 
@@ -97,13 +97,13 @@ class Response(models.Model):
         ('accepted', 'принято'),
     )
 
-    publication = models.ForeignKey(Publication, on_delete=models.CASCADE, related_name='responses')
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='responses')
-    status = models.CharField(max_length=20, choices=RESPONSE_LIST, default='pending')
-    text = models.TextField()
-    message = models.CharField(max_length=168)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    publication = models.ForeignKey(Publication, on_delete=models.CASCADE, related_name='responses', verbose_name='Публикация')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='responses', verbose_name='Автор')
+    status = models.CharField(max_length=20, choices=RESPONSE_LIST, default='pending', verbose_name='Статус')
+    text = models.TextField(verbose_name='Текст')
+    message = models.CharField(max_length=168, verbose_name='Сообщение')
+    created = models.DateTimeField(auto_now_add=True, verbose_name='Создано')
+    updated = models.DateTimeField(auto_now=True, verbose_name='Обновлено')
 
     class Meta:
         verbose_name = 'Отклик'
@@ -127,7 +127,7 @@ class OneTimeCode(models.Model):
 def send_response_notification(sender, instance, created, **kwargs):
     if created:
         publication = instance.publication
-        email = instance.author.email
+        email = publication.author.email
 
         subject = 'Новый отклик на Вашу публикацию'
 

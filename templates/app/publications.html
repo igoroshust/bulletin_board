@@ -11,15 +11,14 @@
                 <!-- Blog entries-->
  {# {% include 'widgets.html' %} #}
                 <div class="col-lg-8">
+                    <br>
+                    <h3>Список публикаций</h3>
+                    <br>
                     <!-- Featured blog post-->
                     {% for pubs in publications %}
                     {% if publications %}
                     <div class="card mb-4">
-                        {% if pubs.image %}
-                       <img src="{{ pubs.image.url }}" style="width: 350; height: 350px; border-radius: 5px;">
-                        {% else %}
                         <a href="#!"><img class="card-img-top" src="https://dummyimage.com/850x350/dee2e6/6c757d.jpg" alt="..." /></a>
-                        {% endif %}
                         <div class="card-body">
                             <div class="small text-muted">{{ pubs.date|date:"d M, Y" }}</div>
                             <h2 class="card-title">{{ pubs.name }}</h2>
