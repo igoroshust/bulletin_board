@@ -2,7 +2,11 @@
 <header class="py-5 bg-light border-bottom mb-4">
             <div class="container">
                 <div class="text-center my-5">
-                    <h1 class="fw-bolder">Добро пожаловать, {{ user.username }}!</h1>
+                    {% if user.is_authenticated %}
+                    <h1 class="fw-bolder">Рады Вас приветствовать, {{ user.username }}!</h1>
+                    {% else %}
+                    <h1 class="fw-bolder">Добро пожаловать!</h1>
+                    {% endif %}
                     <p class="lead mb-0">Bulletin Board – онлайн-площадка для размещения публикаций</p>
                 </div>
             </div>

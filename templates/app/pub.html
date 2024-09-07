@@ -24,8 +24,9 @@
 <h3 style="padding-top: 20px;">{{ publication.name }}</h3>
 <p>{{ publication.title }}</p>
 {% if publication.image %}
-<p><img src="{{ publication.image.url }}" style="width: 502px; height: 450px; border-radius: 5px;"></p>
+    <img src="{{ publication.image.url }}" style="width: 600px; height: 400px; border-radius: 5px;">
 {% endif %}
+    <br>
 {% if publication.video_url %}
 <video height="320" width="320">
 <source src="{{ publication.video_url }}" type="video/mp4" />

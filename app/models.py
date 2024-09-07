@@ -24,6 +24,10 @@ class User(AbstractUser):
         if self.is_superuser: self.is_active=True
         return super().save(*args, **kwargs)
 
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
     def __str__(self):
         return self.username
 
@@ -62,6 +66,7 @@ class Publication(models.Model):
     title = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
     image = models.FileField(upload_to='uploads/', null=True, blank=True)
+    wrapper = models.FileField(upload_to='uploads/', null=True, blank=True)
     # video_url = models.URLField(null=True, blank=True)
     # created_at = models.DateTimeField(auto_now_add=True)
     # updated_at = models.DateTimeField(auto_now=True)

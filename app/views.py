@@ -93,6 +93,7 @@ class PublicationUpdate(LoginRequiredMixin, UpdateView):
 
 class PublicationDelete(LoginRequiredMixin, DeleteView):
     """Удаление статьи"""
+    raise_exception = True
     permission_required = ('app.delete_publication',)
     model = Publication
     template_name = 'app/pub_delete.html'

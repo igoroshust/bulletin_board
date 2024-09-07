@@ -12,7 +12,7 @@ class CommonSignupForm(SignupForm):
     def save(self, request):
         user = super(CommonSignupForm, self).save(request)
         user.is_active = False
-        count = random.randint(1111, 9999)
+        count = random.randint(1000, 2000)
         code = ''.join(str(count))
         user.code = code
         user.save()
@@ -32,6 +32,7 @@ class PubForm(forms.ModelForm):
             'title',
             'category',
             'image',
+            'wrapper',
             # 'video_url',
         ]
         labels = {
@@ -39,6 +40,7 @@ class PubForm(forms.ModelForm):
             'title': 'Текст',
             'category': 'Категория',
             'image': 'Изображение',
+            'wrapper': 'Обложка',
             # 'video_url': 'Видео (ссылка)',
         }
 
@@ -47,6 +49,8 @@ class PubForm(forms.ModelForm):
         name = cleaned_data.get('name')
         text = cleaned_data.get('title')
         category = cleaned_data.get('category')
+        image = cleaned_data.get('image')
+        wrapper = cleaned_data.get('wrapper')
 
         if name == category:
             raise ValidationError(
