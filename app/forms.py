@@ -12,7 +12,7 @@ class CommonSignupForm(SignupForm):
     def save(self, request):
         user = super(CommonSignupForm, self).save(request)
         user.is_active = False
-        count = random.randint(1000, 2000)
+        count = random.randint(1000, 9999)
         code = ''.join(str(count))
         user.code = code
         user.save()
